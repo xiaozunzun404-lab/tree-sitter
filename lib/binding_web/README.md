@@ -1,66 +1,7 @@
-# Web Tree-sitter
-
-[![npmjs.com badge]][npmjs.com]
-
-[npmjs.com]: https://www.npmjs.org/package/web-tree-sitter
-[npmjs.com badge]: https://img.shields.io/npm/v/web-tree-sitter.svg?color=%23BF4A4A
-
-WebAssembly bindings to the [Tree-sitter](https://github.com/tree-sitter/tree-sitter) parsing library.
-
-## Setup
-
-You can download the `web-tree-sitter.js` and `web-tree-sitter.wasm` files from [the latest GitHub release][gh release] and load
-them using a standalone script:
-
-```html
-<script src="/the/path/to/web-tree-sitter.js"></script>
-
-<script>
-  const { Parser } = window.TreeSitter;
-  Parser.init().then(() => { /* the library is ready */ });
-</script>
-```
-
-You can also install [the `web-tree-sitter` module][npm module] from NPM and load it using a system like Webpack:
+# Web Tree-sitterin your `package.json`:
 
 ```js
-const { Parser } = require('web-tree-sitter');
-Parser.init().then(() => { /* the library is ready */ });
-```
-
-or Vite:
-
-```js
-import { Parser }  from 'web-tree-sitter';
-Parser.init().then(() => { /* the library is ready */ });
-```
-
-With Vite, you also need to make sure your server provides the `tree-sitter.wasm`
-file to your `public` directory. You can do this automatically with a `postinstall`
-[script](https://docs.npmjs.com/cli/v10/using-npm/scripts) in your `package.json`:
-
-```js
-"postinstall": "cp node_modules/web-tree-sitter/tree-sitter.wasm public"
-```
-
-You can also use this module with [deno](https://deno.land/):
-
-```js
-import { Parser } from "npm:web-tree-sitter";
-await Parser.init();
-// the library is ready
-```
-
-To use the debug version of the library, replace your import of `web-tree-sitter` with `web-tree-sitter/debug`:
-
-```js
-import { Parser } from 'web-tree-sitter/debug'; // or require('web-tree-sitter/debug')
-
-Parser.init().then(() => { /* the library is ready */ });
-```
-
-This will load the debug version of the `.js` and `.wasm` file, which includes debug symbols and assertions.
-
+"
 > [!NOTE]
 > The `web-tree-sitter.js` file on GH releases is an ES6 module. If you are interested in using a pure CommonJS library, such
 > as for Electron, you should use the `web-tree-sitter.cjs` file instead.
@@ -90,84 +31,9 @@ const tree = parser.parse(sourceCode);
 
 and inspect the syntax tree.
 
-```javascript
-console.log(tree.rootNode.toString());
-
-// (program
-//   (lexical_declaration
-//     (variable_declarator (identifier) (number)))
-//   (expression_statement
-//     (call_expression
-//       (member_expression (identifier) (property_identifier))
-//       (arguments (identifier)))))
-
-const callExpression = tree.rootNode.child(1).firstChild;
-console.log(callExpression);
-
-// { type: 'call_expression',
-//   startPosition: {row: 0, column: 16},
-//   endPosition: {row: 0, column: 30},
-//   startIndex: 0,
-//   endIndex: 30 }
-```
-
-### Editing
-
-If your source code *changes*, you can update the syntax tree. This will take less time than the first parse.
-
-```javascript
-// Replace 'let' with 'const'
-const newSourceCode = 'const x = 1; console.log(x);';
-
-tree.edit({
-  startIndex: 0,
-  oldEndIndex: 3,
-  newEndIndex: 5,
-  startPosition: {row: 0, column: 0},
-  oldEndPosition: {row: 0, column: 3},
-  newEndPosition: {row: 0, column: 5},
-});
-
-const newTree = parser.parse(newSourceCode, tree);
-```
-
-### Parsing Text From a Custom Data Structure
-
-If your text is stored in a data structure other than a single string, you can parse it by supplying a callback to `parse`
-instead of a string:
-
-```javascript
-const sourceLines = [
-  'let x = 1;',
-  'console.log(x);'
-];
-
-const tree = parser.parse((index, position) => {
-  let line = sourceLines[position.row];
-  if (line) return line.slice(position.column);
-});
-```
-
-### Getting the `.wasm` language files
-
-There are several options on how to get the `.wasm` files for the languages you want to parse.
-
-#### From npmjs.com
-
-The recommended way is to just install the package from npm. For example, to parse JavaScript, you can install the `tree-sitter-javascript`
+```, to parse JavaScript, you can install the `tree-sitter-javascript`
 package:
-
-```sh
-npm install tree-sitter-javascript
-```
-
-Then you can find the `.wasm` file in the `node_modules/tree-sitter-javascript` directory.
-
-#### From GitHub
-
-You can also download the `.wasm` files from GitHub releases, so long as the repository uses our reusable workflow to publish
-them.
-For example, you can download the JavaScript `.wasm` file from the tree-sitter-javascript [releases page][gh release js].
+][gh release js].
 
 #### Generating `.wasm` files
 
@@ -251,11 +117,7 @@ where the loader expects the script to be. It returns the path where the loader 
 case, we want to return just the `scriptName` so that the loader will look at `http://localhost:3000/tree-sitter.wasm`
 and not `http://localhost:3000/_next/static/chunks/pages/tree-sitter.wasm`.
 
-For more information on the module options you can pass in, see the [emscripten documentation][emscripten-module-options].
-
-#### "Can't resolve 'fs' in 'node_modules/web-tree-sitter"
-
-Most bundlers will notice that the `web-tree-sitter.js` file is attempting to import `fs`, i.e. node's file system library.
+For system library.
 Since this doesn't exist in the browser, the bundlers will get confused. For Webpack, you can fix this by adding the
 following to your webpack config:
 
@@ -269,12 +131,4 @@ following to your webpack config:
 }
 ```
 
-[docker]: https://www.docker.com
-[emscripten]: https://emscripten.org
-[emscripten-module-options]: https://emscripten.org/docs/api_reference/module.html#affecting-execution
-[gh release]: https://github.com/tree-sitter/tree-sitter/releases/latest
-[gh release js]: https://github.com/tree-sitter/tree-sitter-javascript/releases/latest
-[node bindings]: https://github.com/tree-sitter/node-tree-sitter
-[npm module]: https://www.npmjs.com/package/web-tree-sitter
-[podman]: https://podman.io
-[wasi-sdk]: https://github.com/WebAssembly/wasi-sdk
+[
